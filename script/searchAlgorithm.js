@@ -209,14 +209,13 @@ async function RightHand_Search() {
 // Dijkstra's Algorithm
 async function Dijkstra_Search() {
   let find = false;
-  let queue = new Queue();
+  let minHeap = new MinHeap(a.distance < b.distance);
   let current = { x: 0, y: 0, distance: 0 };
   let visited = new Array(Constant.row * Constant.col);
-  queue.enqueue(current);
+  minHeap.enqueue(current);
   maze[current.x][current.y].visited = true;
-  while (queue.length() > 0) {
-    queue.sort((a, b) => a.distance - b.distance);
-    let current = queue.dequeue();
+  while (minHeap.length() > 0) {
+    let current = minHeap.extractMin();
     let x = current.x;
     let y = current.y;
     visited[x * Constant.col + y] = true;
@@ -247,28 +246,28 @@ async function Dijkstra_Search() {
       switch (direction) {
         case 0:
           if (!visited[x * Constant.col + y - 1]) {
-            queue.enqueue({ x: x, y: y - 1, distance: current.distance + 5 });
+            minHeap.insert({ x: x, y: y - 1, distance: current.distance + 5 });
             visited[x * Constant.col + y - 1] = true;
             drawPath(x, y, 0);
           }
           break;
         case 1:
           if (!visited[(x + 1) * Constant.col + y]) {
-            queue.enqueue({ x: x + 1, y: y, distance: current.distance + 1 });
+            minHeap.insert({ x: x + 1, y: y, distance: current.distance + 1 });
             visited[(x + 1) * Constant.col + y] = true;
             drawPath(x, y, 1);
           }
           break;
         case 2:
           if (!visited[x * Constant.col + y + 1]) {
-            queue.enqueue({ x: x, y: y + 1, distance: current.distance + 1 });
+            minHeap.insert({ x: x, y: y + 1, distance: current.distance + 1 });
             visited[x * Constant.col + y + 1] = true;
             drawPath(x, y, 2);
           }
           break;
         case 3:
           if (!visited[(x - 1) * Constant.col + y]) {
-            queue.enqueue({ x: x - 1, y: y, distance: current.distance + 5 });
+            minHeap.insert({ x: x - 1, y: y, distance: current.distance + 5 });
             visited[(x - 1) * Constant.col + y] = true;
             drawPath(x, y, 3);
           }
@@ -282,105 +281,13 @@ async function Dijkstra_Search() {
   console.log("Dijkstra Search");
 }
 // A* Algorithm
-async function AStar_Search() {
-  // let queue = new Queue();
-  // let current = { x: 0, y: 0, distance: 0, heuristic: 0 };
-  // let visited = new Array(Constant.row * Constant.col);
-  // queue.enqueue(current);
-  // maze[current.x][current.y].visited = true;
-
-  // function heuristic(x, y) {
-  //   return Math.abs(x - Constant.end.x) + Math.abs(y - Constant.end.y);
-  // }
-
-  // while (queue.length() > 0) {
-  //   queue.sort((a, b) => a.distance + a.heuristic - (b.distance + b.heuristic));
-  //   let current = queue.dequeue();
-  //   let x = current.x;
-  //   let y = current.y;
-  //   visited[x * Constant.col + y] = true;
-  //   if (FindPath && x == Constant.end.x && y == Constant.end.y) {
-  //     alert("Path Found");
-  //     find = true;
-  //     break;
-  //   }
-  //   let directions = [];
-  //   if (y - 1 >= 0 && !maze[x][y].top && !visited[x * Constant.col + y - 1])
-  //     directions.push(0);
-  //   if (
-  //     x + 1 < Constant.row &&
-  //     !maze[x][y].right &&
-  //     !visited[(x + 1) * Constant.col + y]
-  //   )
-  //     directions.push(1);
-  //   if (
-  //     y + 1 < Constant.col &&
-  //     !maze[x][y].bottom &&
-  //     !visited[x * Constant.col + y + 1]
-  //   )
-  //     directions.push(2);
-  //   if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])
-  //     directions.push(3);
-  //   for (let direction of directions) {
-  //     await sleep(interval);
-  //     switch (direction) {
-  //       case 0:
-  //         if (!visited[x * Constant.col + y - 1]) {
-  //           queue.enqueue({
-  //             x: x,
-  //             y: y - 1,
-  //             distance: current.distance + Constant.distanceY,
-  //             heuristic: heuristic(x, y - 1),
-  //           });
-  //           visited[x * Constant.col + y - 1] = true;
-  //           drawPath(x, y, 0);
-  //         }
-  //         break;
-  //       case 1:
-  //         if (!visited[(x + 1) * Constant.col + y]) {
-  //           queue.enqueue({
-  //             x: x + 1,
-  //             y: y,
-  //             distance: current.distance + Constant.distanceX,
-  //             heuristic: heuristic(x + 1, y),
-  //           });
-  //           visited[(x + 1) * Constant.col + y] = true;
-  //           drawPath(x, y, 1);
-  //         }
-  //         break;
-  //       case 2:
-  //         if (!visited[x * Constant.col + y + 1]) {
-  //           queue.enqueue({
-  //             x: x,
-  //             y: y + 1,
-  //             distance: current.distance + Constant.distanceY,
-  //             heuristic: heuristic(x, y + 1),
-  //           });
-  //           visited[x * Constant.col + y + 1] = true;
-  //           drawPath(x, y, 2);
-  //         }
-  //         break;
-  //       case 3:
-  //         if (!visited[(x - 1) * Constant.col + y]) {
-  //           queue.enqueue({
-  //             x: x - 1,
-  //             y: y,
-  //             distance: current.distance + Constant.distanceX,
-  //             heuristic: heuristic(x - 1, y),
-  //           });
-  //           visited[(x - 1) * Constant.col + y] = true;
-  //           drawPath(x, y, 3);
-  //         }
-  //         break;
-  //     }
-  //   }
-  // }
-
-   let find = false;
+async function AStar_Search(chosen) {
+  
+  let find = false;
   let visited = new Array(Constant.row * Constant.col);
   let mark = new Stack();
   
-  async function AStar(x, y, distance) {
+  async function AStarDFS(x, y, distance) {
     if (find || visited[x * Constant.col + y]) return;
     visited[x * Constant.col + y] = true;
     if (FindPath && x == Constant.end.x && y == Constant.end.y) {
@@ -412,13 +319,79 @@ async function AStar_Search() {
       mark.push({ x: x, y: y, direction: direction });
       await sleep(interval);
       drawPath(x, y, direction);
-      await AStar(nx, ny, ndistance);
+      await AStarDFS(nx, ny, ndistance);
       if (find) return;
       mark.pop();
     }
   }
+
+  async function AStarBFS() {
+    let minHeap = new Heap((a, b) => (a.distance + a.heuristic) < (b.distance + b.heuristic));
+    let current = { x: 0, y: 0, distance: 0, heuristic: 0 };
+    minHeap.insert(current);
+    await sleep(interval);
+    maze[current.x][current.y].visited = true;
   
-  await AStar(0, 0, 0);
+    function heuristic(x, y) {
+      return Math.abs(x - Constant.end.x) + Math.abs(y - Constant.end.y);
+    }
+  
+    while (minHeap.length() > 0) {
+      let current = minHeap.extractMin();
+      let x = current.x;
+      let y = current.y;
+      visited[x * Constant.col + y] = true;
+      if (FindPath && x == Constant.end.x && y == Constant.end.y) {
+        alert("Path Found");
+        find = true;
+        break;
+      }
+      let directions = [];
+      if (y - 1 >= 0 && !maze[x][y].top && !visited[x * Constant.col + y - 1])
+        directions.push(0);
+      if ( x + 1 < Constant.row &&!maze[x][y].right &&!visited[(x + 1) * Constant.col + y])
+        directions.push(1);
+      if (y + 1 < Constant.col &&!maze[x][y].bottom &&!visited[x * Constant.col + y + 1])
+        directions.push(2);
+      if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])
+        directions.push(3);
+      for (let direction of directions) {
+        await sleep(interval);
+          let nx = x;
+          let ny = y;
+          switch (direction) {
+            case 0:
+              ny = y - 1;
+              break;
+            case 1:
+              nx = x + 1;
+              break;
+            case 2:
+              ny = y + 1;
+              break;
+            case 3:
+              nx = x - 1;
+              break;
+          }
+          if (!visited[nx * Constant.col + ny]) {
+            minHeap.insert({
+              x: nx,
+              y: ny,
+              distance: current.distance + (direction % 2 == 0 ? Constant.distanceY : Constant.distanceX),
+              heuristic: heuristic(nx, ny),
+            });
+            visited[nx * Constant.col + ny] = true;
+            drawPath(x, y, direction);
+          }
+      }
+    }
+  }
+  if (!chosen) {
+    await AStarDFS(0, 0, 0);
+  } else {
+    await AStarBFS();
+  }
+
   
   if (FindPath && !find) {
     alert("No Path Found");

@@ -23,7 +23,7 @@
             </div>
             <div class="optionList" id="GenerateAlgorithmLabel">
               <label for>Generate Algorithm</label>
-              <ul class="optionGroup" id="GenerateAlgorithm">
+              <ul class="optionGroup" id="GenerateAlgorithm" custom-id="GenerateAlgorithm">
                 <li id="DFS_Generate">DFS Algorithm</li>
                 <li id="Recur_Generate">Recursive Backtracker</li>
                 <li id="Prim_Generate">Prim's Algorithm</li>
@@ -32,12 +32,13 @@
             </div>
             <div class="optionList" id="SearchAlgorithmLabel">
               <label for>Search Algorithm</label>
-              <ul class="optionGroup" id="SearchAlgorithm">
+              <ul class="optionGroup" id="SearchAlgorithm" custom-id="SearchAlgorithm">
                 <li id="BFS_Search">BFS Algorithm</li>
                 <li id="DFS_Search">DFS Algorithm</li>
                 <li id="Dijkstra_Search" style="display: none;">Dijkstra's Algorithm</li>
                 <li id="RightHand_Search">RightHand Search</li>
-                <li id="Astar_Search">A* Algorithm</li>
+                <li id="Astar_SearchDFS">A* Algorithm DFS</li>
+                <li id="Astar_SearchBFS">A* Algorithm BFS</li>
               </ul>
             </div>
             <div class="optionList">
@@ -60,11 +61,11 @@
               <!-- set row and col -->
               <div class="settingGroup">
                 <label for="Row">Row</label>
-                <input id="Row" type="number" value="20" min="1" max="100" />
+                <input id="Row" type="number" value="50" min="1" max="100" />
               </div>
               <div class="settingGroup">
                 <label for="Col">Col</label>
-                <input id="Col" type="number" value="20" min="1" max="100" />
+                <input id="Col" type="number" value="50" min="1" max="100" />
               </div>
               <div class="settingGroup">
                 <label for="FindPath">FindPath</label>
@@ -117,8 +118,7 @@
   .container {
     width: 100%;
     height: 100%;
-    min-width: 1600px;
-    min-height: 940px;
+    aspect-ratio: 16/9;
     display: flex;
     flex-direction: column;
     border: #000 5px solid;
@@ -247,9 +247,9 @@
     transition: all 0.5s ease;
     li {
         transition: transform 0.3s ease;
-      cursor: pointer;
-      &.blank {
-        height: 70px;
+        cursor: pointer;
+        &.blank {
+          height: 70px;
       }
       &:hover {
         background-color: #f0f0f0;
@@ -274,8 +274,11 @@
     font-family: "Baskerville Old Face";
     transform: skewX(-30deg) translateX(20px);
   }
-  .show {
+  ul[custom-id="GenerateAlgorithm"].show {
     height: 200px;
+  }
+  ul[custom-id="SearchAlgorithm"].show  {
+    height: 230px;
   }
 </style>
 

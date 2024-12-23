@@ -80,3 +80,75 @@ class Stack {
         console.log(this.data);
     }
 }
+
+class Heap{
+    constructor(cmp){
+        this.data = [];
+        this.cmp = cmp;
+    }
+
+    insert(element){
+        this.data.push(element);
+        this.bubbleUp(this.data.length - 1);
+    }
+
+    bubbleUp(index){
+        while(index > 0){
+            let parent = Math.floor((index - 1) / 2);
+            if(this.cmp(this.data[index], this.data[parent])) {
+                [this.data[index], this.data[parent]] = [this.data[parent], this.data[index]];
+                index = parent;
+            }
+            else break;
+        }
+    }
+
+    extractMin(){
+        if(this.data.length === 0) return;
+        let min = this.data[0];
+        this.data[0] = this.data[this.data.length - 1];
+        this.data.pop();
+        this.bubbleDown(0);
+        return min;
+    }
+
+    bubbleDown(index){
+        while(true){
+            let left = 2 * index + 1;
+            let right = 2 * index + 2;
+            let smallest = index;
+            if(left < this.data.length && this.cmp(this.data[left], this.data[smallest])) smallest = left;
+            if(right < this.data.length && this.cmp(this.data[right], this.data[smallest])) smallest = right;
+            if(smallest !== index){
+                [this.data[index], this.data[smallest]] = [this.data[smallest], this.data[index]];
+                index = smallest;
+            }
+            else break;
+        }
+    }
+
+    isEmpty(){
+        return this.data.length === 0;
+    }
+
+    length(){
+        return this.data.length;
+    }
+
+    print(){
+        // order by level
+        let level = 0;
+        let levelSize = 1;
+        let count = 0;
+        for(let i = 0; i < this.data.length; i++){
+            if(count === levelSize){
+                console.log();
+                level++;
+                levelSize *= 2;
+                count = 0;
+            }
+            console.log(this.data[i]);
+            count++;
+        }
+    }
+}

@@ -50,8 +50,11 @@
                     case "Dijkstra's Algorithm":
                         Dijkstra_Search();
                         break;
-                    case "A* Algorithm":
-                        AStar_Search();
+                    case "A* Algorithm DFS":
+                        AStar_Search(0);
+                        break;
+                    case "A* Algorithm BFS":
+                        AStar_Search(1);
                         break;
                 }
                 e.stopPropagation();

@@ -232,8 +232,12 @@
                         instance: document.getElementById("Dijkstra_Search")
                     },
                     {
-                        label: "A* Algorithm",
-                        instance: document.getElementById("Astar_Search")
+                        label: "A* Algorithm DFS",
+                        instance: document.getElementById("Astar_SearchDFS")
+                    },
+                    {
+                        label: "A* Algorithm BFS",
+                        instance: document.getElementById("Astar_SearchBFS")
                     }
                 ]
             },
@@ -251,8 +255,8 @@
         ctx = canvas.getContext("2d");
         //test constant
         interval = 0;
-        row = 20;
-        col = 20;
+        row = 50;
+        col = 50;
         Constant={
             row:row,
             col:col,
@@ -280,7 +284,7 @@
             canvas.height = Constant.height * dpr;
             ctx.scale(dpr, dpr);
             document.getElementById("Start").value = `[0,0]`;
-            document.getElementById("End").value = `[19,19]`;
+            document.getElementById("End").value = `[${col-1},${row-1}]`;
         })();
     }
 
