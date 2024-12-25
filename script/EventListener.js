@@ -67,9 +67,15 @@
         optionList.setting.instance.addEventListener("click", () => {
             switchToSetting();
         })
+        optionList.customMaze.instance.addEventListener("click", () => {
+            switchToCustomMaze();
+        })
         //collapseAside
-        document.querySelector(".collapseAside").addEventListener("click", () => {
-            document.querySelector("nav").classList.toggle("collapse");
+        document.querySelector(".collapseAsideLeft").addEventListener("click", () => {
+            document.getElementById("AsideLeft").classList.toggle("collapse");
+        })
+        document.querySelector(".collapseAsideRight").addEventListener("click", () => {
+            document.getElementById("AsideRight").classList.toggle("collapse");
         })
 
         // interface
@@ -84,10 +90,52 @@
         document.getElementById("FindPath").addEventListener("click", (e) => {
             FindPath = e.target.checked;
         })
+        document.getElementById("Dynamic").addEventListener("click", (e) => {
+            interval = e.target.checked? 1 : 0;
+        })
         document.getElementById("DistanceY").addEventListener("change", (e) => {
             Constant.distanceY = parseInt(e.target.value);
         })
         document.getElementById("DistanceX").addEventListener("change", (e) => {
             Constant.distanceX = parseInt(e.target.value);
         })
+
+        document.getElementById('submit').addEventListener('click', function(){
+            var userInput = document.getElementById('userInput').value;
+            var adjMatrix = analysisText(userInput);
+            maze = convertAdjMatrixToMaze(adjMatrix);
+            console.log(maze);
+            setRow(adjMatrix.length);
+            setCol(adjMatrix[0].length);
+            switchToMaze();
+            recorverMaze();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(){
+            var file = this.files[0];
+            var reader = new FileReader();
+            // if json file
+            if(file.name.split('.').pop() == 'json'){
+                reader.onload = function(e){
+                    var text = e.target.result;
+                    var json = JSON.parse(text);
+                    analysisJSON(text);
+                    switchToMaze();
+                    recorverMaze();
+                };
+                reader.readAsText(file);
+                return;
+            }if(file.name.split('.').pop() == 'txt'){
+                reader.onload = function(e){
+                    var text = e.target.result;
+                    var adjMatrix = analysisText(text);
+                    maze = convertAdjMatrixToMaze(adjMatrix);
+                    switchToMaze();
+                    recorverMaze();
+                };
+                reader.readAsText(file);
+                return;
+            }
+        
+        });
     }

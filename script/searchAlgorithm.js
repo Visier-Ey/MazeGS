@@ -2,7 +2,7 @@
 async function BFS_Search() {
   find = false;
   let queue = new Queue();
-  let current = { x: 0, y: 0 };
+  let current = Constant.start;
   let visited = new Array(Constant.row * Constant.col);
   queue.enqueue(current);
   maze[current.x][current.y].visited = true;
@@ -80,8 +80,8 @@ async function DFS_Search() {
     if (find || visited[x * Constant.col + y]) return;
     visited[x * Constant.col + y] = true;
     if (FindPath && x == Constant.end.x && y == Constant.end.y) {
-      alert("Path Found");
       drawMarkPath(mark);
+      alert("Path Found");
       find = true;
       return;
     }
@@ -110,7 +110,7 @@ async function DFS_Search() {
     }
   }
 
-  await DFS(0, 0);
+  await DFS(Constant.start.x, Constant.start.y);
   if (FindPath && !find) {
     alert("No Path Found");
   }
@@ -121,7 +121,7 @@ async function DFS_Search() {
 async function RightHand_Search() {
   let find = false;
   let time = 0;
-  let current = { x: 0, y: 0, direction: 1 };
+  let current = {...Constant.start, direction: 1 };
   // no visited array, no need to check visited,when the robot goes back, it will not go back to the previous position
   // if arrived at the start position, it will stop
   while (true) {
@@ -210,7 +210,7 @@ async function RightHand_Search() {
 async function Dijkstra_Search() {
   let find = false;
   let minHeap = new MinHeap(a.distance < b.distance);
-  let current = { x: 0, y: 0, distance: 0 };
+  let current = { ...Constant.start, distance: 0 };
   let visited = new Array(Constant.row * Constant.col);
   minHeap.enqueue(current);
   maze[current.x][current.y].visited = true;
@@ -327,9 +327,9 @@ async function AStar_Search(chosen) {
 
   async function AStarBFS() {
     let minHeap = new Heap((a, b) => (a.distance + a.heuristic) < (b.distance + b.heuristic));
-    let current = { x: 0, y: 0, distance: 0, heuristic: 0 };
+    let current = { ...Constant.start, distance: 0, heuristic: 0 };
     minHeap.insert(current);
-    await sleep(interval);
+    // await sleep(interval);
     maze[current.x][current.y].visited = true;
   
     function heuristic(x, y) {
@@ -337,7 +337,9 @@ async function AStar_Search(chosen) {
     }
   
     while (minHeap.length() > 0) {
+      // await sleep(10);
       let current = minHeap.extractMin();
+      // await sleep(10);
       let x = current.x;
       let y = current.y;
       visited[x * Constant.col + y] = true;
@@ -387,7 +389,7 @@ async function AStar_Search(chosen) {
     }
   }
   if (!chosen) {
-    await AStarDFS(0, 0, 0);
+    await AStarDFS(Constant.start.x, Constant.start.y, 0);
   } else {
     await AStarBFS();
   }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="customMaze">
+        <header> <h1>UserInput</h1></header>
+        <main>
+           <textarea name="" id="userInput"></textarea>
+        </main>
+            <input type="file" id="fileInput" accept=".txt">
+            <footer>
+            <input type="text" id="StartInput" placeholder="Start Point">
+            <input type="text" id="EndInput" placeholder="End Point">
+        </footer>
+        <button id="submit">Sure?</button>
+    </div>
+</body>
+</html>
+
+<style>
+    .customMaze{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid black;
+    }
+    header{
+        text-align: center;
+    }
+    main{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    footer{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    input{
+        margin: 10px;
+        text-align: left;
+        vertical-align: top;
+    }
+    button{
+        margin: 10px;
+    }
+    #userInput{
+        font-size: 20px;
+        width: 300px;
+        height: 300px;
+    }
+    #fileInput{
+        margin: 10px;
+        color: white;
+    }
+    #StartInput{
+        width: 100px;
+    }
+    #EndInput{
+        width: 100px;
+    }
+    #submit{
+        width: 100px;
+        height: 50px;
+    }
+
+</style>
+
+<script>
+    document.getElementById('submit').addEventListener('click', function(){
+        var userInput = document.getElementById('userInput').value;
+        analysisText(userInput);
+        
+    });
+    
+    function analysisText(userInput){
+        var lines = userInput.split('\n');
+        // return AdjMatrix
+        var adjMatrix = [];
+        var numCols = lines[0].split(' ').length;
+        for(var i = 0; i < lines.length; i++){
+            var adjLine = [];
+            var line = lines[i].split(' ');
+            if (line.length !== numCols) {
+                alert("Inconsistent number of columns detected in line " + (i + 1));
+                return;
+            }
+            for(var j = 0; j < line.length; j++){
+                var num = parseInt(line[j]);
+                if (isNaN(num)) {
+                    alert("Invalid input detected: " + line[j]);
+                    return;
+                }
+                adjLine.push(num);
+            }
+            adjMatrix.push(adjLine);
+        }
+        alert("Analysis complete");
+    }
+    function analysisFile(file){
+        var reader = new FileReader();
+        reader.onload = function(e){
+            var text = e.target.result;
+            analysisText(text);
+        };
+        reader.readAsText(file);
+    }
+</script>
