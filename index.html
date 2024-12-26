@@ -70,11 +70,14 @@
                 <input type="file" id="fileInput" accept=".txt,.json">
                 <footer>
                   <label for="">Start</label>
-                <input type="text" id="StartInput" placeholder="[x,y]">
+                <input type="text" id="StartInput" placeholder="x,y">
                 <label for="">End</label>
-                <input type="text" id="EndInput" placeholder="[x,y]">
+                <input type="text" id="EndInput" placeholder="x,y">
             </footer>
-            <button id="submit">Sure?</button>
+            <div class="buttonArea">
+              <button id="AMaze">Analysis Maze</button>
+              <button id="CSE">Change Start And End</button>
+            </div>
         </div>
         </div>
         <!--  -->
@@ -200,9 +203,14 @@
   #EndInput{
       width: 100px;
   }
-  #submit{
-      width: 100px;
-      height: 50px;
+  .buttonArea{
+    button{
+        height: 40px;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: all 0.5s ease;
+    }
   }
 
 </style>

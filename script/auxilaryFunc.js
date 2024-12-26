@@ -306,7 +306,6 @@
     }
 
     function clearPath(){
-        ctx.clearRect(0, 0, Constant.width, Constant.height);
         drawMaze();
     }
 

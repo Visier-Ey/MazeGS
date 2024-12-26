@@ -4,7 +4,7 @@
         let current = { x: 0, y: 0 };
         stack.push(current);
         maze[current.x][current.y].visited = true;
-
+        var count = 0;
         while (stack.length > 0) {
             let x = current.x;
             let y = current.y;
@@ -16,28 +16,31 @@
             if (x - 1 >= 0 && !maze[x - 1][y].visited) directions.push(3);
 
             if (directions.length > 0) {
+                var cx = x
+                var cy = y
                 let direction = directions[Math.floor(Math.random() * directions.length)];
                 switch (direction) {
                     case 0:
-                        eminateWall(x, y, 0);
-                        current = { x: x, y: y - 1 };
+                       cy = y - 1;
                         break;
                     case 1:
-                        eminateWall(x, y, 1);
-                        current = { x: x + 1, y: y };
+                        cx = x + 1;
                         break;
                     case 2:
-                        eminateWall(x, y, 2);
-                        current = { x: x, y: y + 1 };
+                        cy = y + 1;
                         break;
                     case 3:
-                        eminateWall(x, y, 3);
-                        current = { x: x - 1, y: y };
+                        cx = x - 1;
                         break;
                 }
+                eminateWall(x, y, direction);
+                current = { x: cx, y: cy };
                 stack.push(current);
                 maze[current.x][current.y].visited = true;
-                await sleep(interval);
+                count++;
+                if (count%4 == 0) {
+                    await sleep(interval);
+                }
             } else {
                 current = stack.pop();
             }
@@ -58,7 +61,7 @@
         }
 
         addNeighbors(current.x, current.y);
-
+        var  count = 0;
         while (neighbors.length > 0) {
             let randomIndex = Math.floor(Math.random() * neighbors.length);
             let next = neighbors.splice(randomIndex, 1)[0];
@@ -71,7 +74,10 @@
             maze[current.x][current.y].visited = true;
             addNeighbors(current.x, current.y);
             }
-            await sleep(interval);
+            count++;
+            if (count%4 == 0) {
+                await sleep(interval);
+            }
         }
         console.log("Prim");
     }
@@ -84,13 +90,13 @@
                 if (i - 1 >= 0) edges.push({ x: i, y: j, direction: 3 });
                 if (j - 1 >= 0) edges.push({ x: i, y: j, direction: 0 });
             }
-        }
+        } // shuffle the edges
         edges = edges.sort(() => Math.random() - 0.5);
         // create the disjoint set
         let disjointSet = new Array(Constant.row * Constant.col);
         for (let i = 0; i < Constant.row * Constant.col; i++) {
             disjointSet[i] = i;
-        }
+        }// init parent
         function find(x) {
             if (disjointSet[x] != x) {
                 disjointSet[x] = find(disjointSet[x]);
@@ -101,6 +107,7 @@
             disjointSet[find(x)] = find(y);
         }
         // eminate the wall
+        var count = 0;
         for (let edge of edges) {
             let x = edge.x;
             let y = edge.y;
@@ -110,7 +117,10 @@
             if (find(x * Constant.col + y) != find(x1 * Constant.col + y1)) {
                 union(x * Constant.col + y, x1 * Constant.col + y1);
                 eminateWall(x, y, direction);
-                await sleep(interval);
+                count++;
+                if (count%4 == 0) {
+                    await sleep(interval);
+                }
             }
         }
         console.log("Kruskal");
@@ -119,33 +129,28 @@
         async function recur(x, y) {
             maze[x][y].visited = true;
             let directions = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
-            for (let direction of directions) {
+            // shuffle the directions
+            for (let direction of directions) { 
+                var cx = x;
+                var cy = y;
                 await sleep(interval);
                 switch (direction) {
                     case 0:
-                        if (y - 1 >= 0 && !maze[x][y - 1].visited) {
-                            eminateWall(x, y, 0);
-                            recur(x, y - 1);
-                        }
+                        cy = y - 1;
                         break;
                     case 1:
-                        if (x + 1 < Constant.row && !maze[x + 1][y].visited) {
-                            eminateWall(x, y, 1);
-                            recur(x + 1, y);
-                        }
+                        cx = x + 1;
                         break;
                     case 2:
-                        if (y + 1 < Constant.col && !maze[x][y + 1].visited) {
-                            eminateWall(x, y, 2);
-                            recur(x, y + 1);
-                        }
+                        cy = y + 1;
                         break;
                     case 3:
-                        if (x - 1 >= 0 && !maze[x - 1][y].visited) {
-                            eminateWall(x, y, 3);
-                            recur(x - 1, y);
-                        }
+                        cx = x - 1;
                         break;
+                }
+                if (cx >= 0 && cx < Constant.row && cy >= 0 && cy < Constant.col && !maze[cx][cy].visited) {
+                    eminateWall(x, y, direction);
+                    recur(cx, cy);
                 }
             }
         }

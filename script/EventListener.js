@@ -100,7 +100,7 @@
             Constant.distanceX = parseInt(e.target.value);
         })
 
-        document.getElementById('submit').addEventListener('click', function(){
+        document.getElementById('AMaze').addEventListener('click', function(){
             var userInput = document.getElementById('userInput').value;
             var adjMatrix = analysisText(userInput);
             maze = convertAdjMatrixToMaze(adjMatrix);
@@ -110,7 +110,15 @@
             switchToMaze();
             recorverMaze();
         });
-
+        document.getElementById('CSE').addEventListener('click', function(){
+            // start [x,y] end [x,y]
+            var start = document.getElementById('StartInput').value.split(',');
+            var end = document.getElementById('EndInput').value.split(',');
+            console.log(start, end);
+            var startPos = {x: parseInt(start[0]), y: parseInt(start[1])};
+            var endPos = {x: parseInt(end[0]), y: parseInt(end[1])};
+            setStartEnd(startPos, endPos);
+        });
         document.getElementById('fileInput').addEventListener('change', function(){
             var file = this.files[0];
             var reader = new FileReader();

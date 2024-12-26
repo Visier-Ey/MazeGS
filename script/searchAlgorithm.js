@@ -17,54 +17,31 @@ async function BFS_Search() {
     }
     visited[x * Constant.col + y] = true;
     let directions = [];
-    if (y - 1 >= 0 && !maze[x][y].top && !visited[x * Constant.col + y - 1])
-      directions.push(0);
-    if (
-      x + 1 < Constant.row &&
-      !maze[x][y].right &&
-      !visited[(x + 1) * Constant.col + y]
-    )
-      directions.push(1);
-    if (
-      y + 1 < Constant.col &&
-      !maze[x][y].bottom &&
-      !visited[x * Constant.col + y + 1]
-    )
-      directions.push(2);
-    if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])
-      directions.push(3);
+    if (y - 1 >= 0 && !maze[x][y].top && !visited[x * Constant.col + y - 1])directions.push(0);
+    if (x + 1 < Constant.row && !maze[x][y].right && !visited[(x + 1) * Constant.col + y])directions.push(1);
+    if (y + 1 < Constant.col && !maze[x][y].bottom && !visited[x * Constant.col + y + 1])directions.push(2);
+    if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])directions.push(3);
     for (let direction of directions) {
+      var cx = x;
+      var cy = y;
       await sleep(interval);
       switch (direction) {
         case 0:
-          if (!visited[x * Constant.col + y - 1]) {
-            queue.enqueue({ x: x, y: y - 1 });
-            visited[x * Constant.col + y - 1] = true;
-            drawPath(x, y, 0);
-          }
+          cy = y - 1;
           break;
         case 1:
-          if (!visited[(x + 1) * Constant.col + y]) {
-            queue.enqueue({ x: x + 1, y: y });
-            visited[(x + 1) * Constant.col + y] = true;
-            drawPath(x, y, 1);
-          }
+          cx = x + 1;
           break;
         case 2:
-          if (!visited[x * Constant.col + y + 1]) {
-            queue.enqueue({ x: x, y: y + 1 });
-            visited[x * Constant.col + y + 1] = true;
-            drawPath(x, y, 2);
-          }
+          cy = y + 1;
           break;
         case 3:
-          if (!visited[(x - 1) * Constant.col + y]) {
-            queue.enqueue({ x: x - 1, y: y });
-            visited[(x - 1) * Constant.col + y] = true;
-            drawPath(x, y, 3);
-          }
+          cx = x - 1;
           break;
       }
+      queue.enqueue({ x: cx, y: cy });
+      visited[cx * Constant.col + cy] = true;
+      drawPath(x, y, direction);
     }
   }
   if (FindPath && !find) {
@@ -164,6 +141,8 @@ async function RightHand_Search() {
       if (x + 1 < Constant.row && !maze[x][y].right) directions.push(1);
     }
     let next = false;
+    var cx = x;
+    var cy = y;
     for (let direction of directions) {
       if (next) break;
       switch (direction) {
@@ -326,7 +305,7 @@ async function AStar_Search(chosen) {
   }
 
   async function AStarBFS() {
-    let minHeap = new Heap((a, b) => (a.distance + a.heuristic) < (b.distance + b.heuristic));
+    let minHeap = new Heap((a, b) => ( a.heuristic) < ( b.heuristic));
     let current = { ...Constant.start, distance: 0, heuristic: 0 };
     minHeap.insert(current);
     // await sleep(interval);
