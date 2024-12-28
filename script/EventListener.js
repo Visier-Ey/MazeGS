@@ -93,6 +93,9 @@
         document.getElementById("Dynamic").addEventListener("click", (e) => {
             interval = e.target.checked? 1 : 0;
         })
+        document.getElementById("Speed").addEventListener("change", (e) => {
+            setSpeed(parseInt(e.target.value));
+        })
         document.getElementById("DistanceY").addEventListener("change", (e) => {
             Constant.distanceY = parseInt(e.target.value);
         })
@@ -104,9 +107,6 @@
             var userInput = document.getElementById('userInput').value;
             var adjMatrix = analysisText(userInput);
             maze = convertAdjMatrixToMaze(adjMatrix);
-            console.log(maze);
-            setRow(adjMatrix.length);
-            setCol(adjMatrix[0].length);
             switchToMaze();
             recorverMaze();
         });

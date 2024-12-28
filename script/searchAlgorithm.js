@@ -6,7 +6,9 @@ async function BFS_Search() {
   let visited = new Array(Constant.row * Constant.col);
   queue.enqueue(current);
   maze[current.x][current.y].visited = true;
+  var count = 0;
   while (queue.length() > 0) {
+    count++;
     let current = queue.dequeue();
     let x = current.x;
     let y = current.y;
@@ -21,10 +23,12 @@ async function BFS_Search() {
     if (x + 1 < Constant.row && !maze[x][y].right && !visited[(x + 1) * Constant.col + y])directions.push(1);
     if (y + 1 < Constant.col && !maze[x][y].bottom && !visited[x * Constant.col + y + 1])directions.push(2);
     if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])directions.push(3);
+    if (count % speed == 0) {
+      await sleep(interval);
+    }
     for (let direction of directions) {
       var cx = x;
       var cy = y;
-      await sleep(interval);
       switch (direction) {
         case 0:
           cy = y - 1;
@@ -49,12 +53,15 @@ async function BFS_Search() {
   }
   console.log("BFS Search");
 }
+
 async function DFS_Search() {
   let find = false;
   let visited = new Array(Constant.row * Constant.col);
   let mark = new Stack();
+  var count = 0;
   async function DFS(x, y) {
     if (find || visited[x * Constant.col + y]) return;
+    count++;
     visited[x * Constant.col + y] = true;
     if (FindPath && x == Constant.end.x && y == Constant.end.y) {
       drawMarkPath(mark);
@@ -69,8 +76,7 @@ async function DFS_Search() {
     if (x + 1 < Constant.row &&!maze[x][y].right &&!visited[(x + 1) * Constant.col + y]) {
       directions.push([x + 1, y, 1]);
     }
-    if (y + 1 < Constant.col &&!maze[x][y].bottom &&!visited[x * Constant.col + y + 1]
-    ) {
+    if (y + 1 < Constant.col &&!maze[x][y].bottom &&!visited[x * Constant.col + y + 1]) {
       directions.push([x, y + 1, 2]);
     }
     if (x - 1 >= 0 &&!maze[x][y].left &&!visited[(x - 1) * Constant.col + y]) {
@@ -79,7 +85,9 @@ async function DFS_Search() {
     for (let [nextX, nextY, direction] of directions) {
       if (find) return;
       mark.push({ x: x, y: y, direction: direction });
-      await sleep(interval);
+      if (count % speed == 0) {
+        await sleep(interval);
+      }
       drawPath(x, y, direction);
       await DFS(nextX, nextY);
       if (find) return;
@@ -99,9 +107,11 @@ async function RightHand_Search() {
   let find = false;
   let time = 0;
   let current = {...Constant.start, direction: 1 };
+  var count = 0;
   // no visited array, no need to check visited,when the robot goes back, it will not go back to the previous position
   // if arrived at the start position, it will stop
   while (true) {
+    count++;
     let x = current.x;
     let y = current.y;
     if (x == Constant.start.x && y == Constant.start.y) {
@@ -176,7 +186,9 @@ async function RightHand_Search() {
           break;
       }
     }
-    await sleep(interval);
+    if (count % speed == 0) {
+      await sleep(interval);
+    }
     if (FindPath) markFindPath(x, y, current.direction);
     else drawPath(x, y, current.direction);
   }
@@ -265,7 +277,7 @@ async function AStar_Search(chosen) {
   let find = false;
   let visited = new Array(Constant.row * Constant.col);
   let mark = new Stack();
-  
+  var count = 0;
   async function AStarDFS(x, y, distance) {
     if (find || visited[x * Constant.col + y]) return;
     visited[x * Constant.col + y] = true;
@@ -275,7 +287,7 @@ async function AStar_Search(chosen) {
       find = true;
       return;
     }
-  
+    count++;
     function heuristic(x, y) {
       return Math.abs(x - Constant.end.x) + Math.abs(y - Constant.end.y);
     }
@@ -296,7 +308,9 @@ async function AStar_Search(chosen) {
     for (let neighbor of neighbors) {
       let [nx, ny, ndistance, , direction] = neighbor;
       mark.push({ x: x, y: y, direction: direction });
-      await sleep(interval);
+      if (count % speed == 0) {
+        await sleep(interval);
+      }
       drawPath(x, y, direction);
       await AStarDFS(nx, ny, ndistance);
       if (find) return;
@@ -314,7 +328,7 @@ async function AStar_Search(chosen) {
     function heuristic(x, y) {
       return Math.abs(x - Constant.end.x) + Math.abs(y - Constant.end.y);
     }
-  
+    
     while (minHeap.length() > 0) {
       // await sleep(10);
       let current = minHeap.extractMin();
@@ -327,6 +341,7 @@ async function AStar_Search(chosen) {
         find = true;
         break;
       }
+      count++;
       let directions = [];
       if (y - 1 >= 0 && !maze[x][y].top && !visited[x * Constant.col + y - 1])
         directions.push(0);
@@ -336,8 +351,10 @@ async function AStar_Search(chosen) {
         directions.push(2);
       if (x - 1 >= 0 && !maze[x][y].left && !visited[(x - 1) * Constant.col + y])
         directions.push(3);
-      for (let direction of directions) {
+      if (count % speed == 0) {
         await sleep(interval);
+      }
+      for (let direction of directions) {
           let nx = x;
           let ny = y;
           switch (direction) {
@@ -367,6 +384,7 @@ async function AStar_Search(chosen) {
       }
     }
   }
+  
   if (!chosen) {
     await AStarDFS(Constant.start.x, Constant.start.y, 0);
   } else {

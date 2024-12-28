@@ -12,7 +12,7 @@ let row;
 let col;
 let Constant;
 let maze;
-
+let speed;
 window.onload = function () {
     GlobalInit();
    
