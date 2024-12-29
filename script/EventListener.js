@@ -114,10 +114,12 @@
             // start [x,y] end [x,y]
             var start = document.getElementById('StartInput').value.split(',');
             var end = document.getElementById('EndInput').value.split(',');
-            console.log(start, end);
-            var startPos = {x: parseInt(start[0]), y: parseInt(start[1])};
-            var endPos = {x: parseInt(end[0]), y: parseInt(end[1])};
+            // console.log(start, end);
+            var startPos = {x: parseInt(start[0].split('[')[1]), y: parseInt(start[1].split(']')[0])};
+            var endPos = {x: parseInt(end[0].split('[')[1]), y: parseInt(end[1].split(']')[0])};
+            // console.log(startPos, endPos);
             setStartEnd(startPos, endPos);
+            alert('Start and End set');
         });
         document.getElementById('fileInput').addEventListener('change', function(){
             var file = this.files[0];

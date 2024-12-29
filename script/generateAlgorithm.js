@@ -1,24 +1,24 @@
 // description: generate maze using different algorithms
 async function DFS_Generate() {
-  let stack = [];
+  let stack = new Stack();
   let current = { x: 0, y: 0 };
   stack.push(current);
   maze[current.x][current.y].visited = true;
   var count = 0;
-  while (stack.length > 0) {
+  while (stack.length() > 0) {
     let x = current.x;
     let y = current.y;
-    let directions = [];
+    let neighbors = [];
 
-    if (y - 1 >= 0 && !maze[x][y - 1].visited) directions.push(0);
-    if (x + 1 < Constant.row && !maze[x + 1][y].visited) directions.push(1);
-    if (y + 1 < Constant.col && !maze[x][y + 1].visited) directions.push(2);
-    if (x - 1 >= 0 && !maze[x - 1][y].visited) directions.push(3);
+    if (y - 1 >= 0 && !maze[x][y - 1].visited) neighbors.push(0);
+    if (x + 1 < Constant.row && !maze[x + 1][y].visited) neighbors.push(1);
+    if (y + 1 < Constant.col && !maze[x][y + 1].visited) neighbors.push(2);
+    if (x - 1 >= 0 && !maze[x - 1][y].visited) neighbors.push(3);
 
-    if (directions.length > 0) {
+    if (neighbors.length > 0) {
       var cx = x;
       var cy = y;
-      let direction = directions[Math.floor(Math.random() * directions.length)];
+      let direction = neighbors[Math.floor(Math.random() * neighbors.length)];
       switch (direction) {
         case 0:
           cy = y - 1;
