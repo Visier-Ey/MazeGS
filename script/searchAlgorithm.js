@@ -47,7 +47,7 @@ async function BFS_Search() {
       visited[cx * Constant.col + cy] = true;
       drawPath(x, y, direction);
     }
-  }s
+  }
   if (FindPath && !find) {
     alert("No Path Found");
   }

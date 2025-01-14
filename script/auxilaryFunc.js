@@ -548,6 +548,8 @@ function setStartEnd(start, end) {
   Constant.end = end;
   document.getElementById("Start").value = `[${start.x},${start.y}]`;
   document.getElementById("End").value = `[${end.x},${end.y}]`;
+  recorverMaze();
+  switchToMaze();
 }
 
 function setSpeed(sp) {
@@ -598,6 +600,7 @@ function transposedMatrix(matrix) {
 function convertAdjMatrixToMaze(adjMatrix) {
   // convert adjMatrix to maze
   adjMatrix = transposedMatrix(adjMatrix);
+  console.log(adjMatrix);
   var maze = new Array(adjMatrix.length);
   for (var i = 0; i < adjMatrix.length; i++) {
     maze[i] = new Array(adjMatrix[i].length);
@@ -619,31 +622,36 @@ function convertAdjMatrixToMaze(adjMatrix) {
       if (adjMatrix[i][j] === 1) {
         continue;
       }
-      if (adjMatrix[i - 1][j] === 0) {
-        maze[ci][cj].left = false;
-        maze[ci - 1][cj].right = false;
+      try {
+        if (adjMatrix[i][j] === 0) {
+         
+          if (adjMatrix[i - 1][j] === 0) {
+            maze[ci][cj].left = false;
+            maze[ci - 1][cj].right = false;
+          }
+          if (adjMatrix[i][j + 1] === 0) {
+            maze[ci][cj].bottom = false;
+            maze[ci][cj + 1].top = false;
+          }
+          if (adjMatrix[i + 1][j] === 0) {
+            maze[ci][cj].right = false;
+            maze[ci + 1][cj].left = false;
+          }
+          if (adjMatrix[i][j - 1] === 0) {
+            maze[ci][cj].top = false;
+            maze[ci][cj - 1].bottom = false;
+          }
+          
+        }
+      } catch (e) {
+        console.log(e);
       }
-      if (adjMatrix[i][j + 1] === 0) {
-        maze[ci][cj].bottom = false;
-        maze[ci][cj + 1].top = false;
-      }
-      if (adjMatrix[i + 1][j] === 0) {
-        maze[ci][cj].right = false;
-        maze[ci + 1][cj].left = false;
-      }
-      if (adjMatrix[i][j - 1] === 0) {
-        maze[ci][cj].top = false;
-        maze[ci][cj - 1].bottom = false;
-      }
+      
     }
   }
   // console.log(maze);
   setCol(adjMatrix[0].length);
   setRow(adjMatrix.length);
-  setStartEnd(
-    { x: 1, y: 1 },
-    { x: adjMatrix.length - 2, y: adjMatrix[0].length - 2 }
-  );
   return maze;
 }
 
